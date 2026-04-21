@@ -1,4 +1,4 @@
-ï»¿using System.Drawing.Imaging;
+using System.Drawing.Imaging;
 
 namespace GuillotineRay;
 
@@ -15,12 +15,12 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
-        this.Text = "Guillotine Ray v1.0.2";
+        this.Text = "Guillotine Ray v1.0.3";
         SetupUi();
         SetLanguage("JP");
         this.Load += (s, e) => {
             _hotkey = new GlobalHotkey(this.Handle);
-            if (!_hotkey.Success) Log(_currentLang == "JP" ? "ã‚¨ãƒ©ãƒ¼: F8ã‚­ãƒ¼ã®ç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸã€‚" : "Error: Failed to register F8 key.");
+            if (!_hotkey.Success) Log(_currentLang == "JP" ? "ƒGƒ‰[: F8ƒL[‚Ì“o˜^‚É¸”s‚µ‚Ü‚µ‚½B" : "Error: Failed to register F8 key.");
         };
         this.FormClosing += (s, e) => { _hotkey?.Dispose(); _matcher.Dispose(); _capture.Dispose(); };
     }
@@ -29,34 +29,34 @@ public partial class Form1 : Form
     {
         int left = 15;
         
-        // è¨€èªåˆ‡ã‚Šæ›¿ãˆãƒœã‚¿ãƒ³
+        // Œ¾ŒêØ‚è‘Ö‚¦ƒ{ƒ^ƒ“
         btnLang = new Button { Text = "JP/EN", Bounds = new Rectangle(210, 5, 50, 22), FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 8) };
         btnLang.Click += (s, e) => SetLanguage(_currentLang == "JP" ? "EN" : "JP");
 
-        // ãƒ•ã‚©ãƒ«ãƒ€é¸æŠ
-        _labels["folder"] = new Label { Text = "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚©ãƒ«ãƒ€", Bounds = new Rectangle(left, 12, 180, 18), ForeColor = Color.LightGray };
+        // ƒtƒHƒ‹ƒ_‘I‘ğ
+        _labels["folder"] = new Label { Text = "ƒeƒ“ƒvƒŒ[ƒgƒtƒHƒ‹ƒ_", Bounds = new Rectangle(left, 12, 180, 18), ForeColor = Color.LightGray };
         string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "templates");
         txtFolder = new TextBox { Bounds = new Rectangle(left, 32, 200, 25), Text = Directory.Exists(defaultPath) ? defaultPath : "" };
         var btnPath = new Button { Text = "...", Bounds = new Rectangle(215, 32, 40, 25), FlatStyle = FlatStyle.Flat };
         btnPath.Click += (s, e) => { using var f = new FolderBrowserDialog(); if (f.ShowDialog() == DialogResult.OK) txtFolder.Text = f.SelectedPath; };
 
-        // ã—ãã„å€¤
-        _labels["thresh"] = new Label { Text = "ã—ãã„å€¤ (0.8 - 0.95)", Bounds = new Rectangle(left, 65, 180, 18), ForeColor = Color.LightGray };
+        // ‚µ‚«‚¢’l
+        _labels["thresh"] = new Label { Text = "‚µ‚«‚¢’l (0.8 - 0.95)", Bounds = new Rectangle(left, 65, 180, 18), ForeColor = Color.LightGray };
         numThreshold = new NumericUpDown { Bounds = new Rectangle(left, 85, 100, 25), DecimalPlaces = 2, Value = 0.9m, Increment = 0.05m, Minimum = 0.1m, Maximum = 1.0m };
 
-        // é–“éš”
-        _labels["interval"] = new Label { Text = "ç›£è¦–é–“éš” (ãƒŸãƒªç§’)", Bounds = new Rectangle(left, 118, 180, 18), ForeColor = Color.LightGray };
+        // ŠÔŠu
+        _labels["interval"] = new Label { Text = "ŠÄ‹ŠÔŠu (ƒ~ƒŠ•b)", Bounds = new Rectangle(left, 118, 180, 18), ForeColor = Color.LightGray };
         numInterval = new NumericUpDown { Bounds = new Rectangle(left, 138, 100, 25), Maximum = 60000, Value = 5000, Minimum = 10 };
 
         // ROI
-        _labels["roi"] = new Label { Text = "ç›£è¦–ç¯„å›² (X, Y, å¹…, é«˜ã•)", Bounds = new Rectangle(left, 172, 240, 18), ForeColor = Color.LightGray };
+        _labels["roi"] = new Label { Text = "ŠÄ‹”ÍˆÍ (X, Y, •, ‚‚³)", Bounds = new Rectangle(left, 172, 240, 18), ForeColor = Color.LightGray };
         string[] roiTags = { "X", "Y", "W", "H" };
         for (int i = 0; i < 4; i++) {
             numRoi[i] = new NumericUpDown { Bounds = new Rectangle(left + i * 60, 192, 55, 25), Maximum = 9999 };
         }
         numRoi[2].Value = 300; numRoi[3].Value = 300;
 
-        btnRoi = new Button { Text = "ç”»é¢ã‹ã‚‰ç¯„å›²ã‚’é¸æŠ", Bounds = new Rectangle(left, 225, 240, 32), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(60, 60, 60) };
+        btnRoi = new Button { Text = "‰æ–Ê‚©‚ç”ÍˆÍ‚ğ‘I‘ğ", Bounds = new Rectangle(left, 225, 240, 32), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(60, 60, 60) };
         btnRoi.Click += (s, e) => {
             this.Opacity = 0; using var sel = new SelectionForm();
             if (sel.ShowDialog() == DialogResult.OK) {
@@ -66,11 +66,11 @@ public partial class Form1 : Form
             this.Opacity = 1;
         };
 
-        // ãƒ­ã‚°
+        // ƒƒO
         lstLog = new ListView { Bounds = new Rectangle(275, 40, 500, 395), View = View.Details, BackColor = Color.Black, ForeColor = Color.Lime, BorderStyle = BorderStyle.None, FullRowSelect = true };
         lstLog.Columns.Add("Time", 70); lstLog.Columns.Add("Log", 420);
 
-        // æ“ä½œãƒœã‚¿ãƒ³
+        // ‘€ìƒ{ƒ^ƒ“
         btnStart = new Button { Text = "START", Bounds = new Rectangle(left, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0, 122, 204), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
         btnStop = new Button { Text = "STOP (F8)", Bounds = new Rectangle(left + 125, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(204, 0, 0), Enabled = false, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
 
@@ -87,15 +87,15 @@ public partial class Form1 : Form
         _currentLang = lang;
         bool isJp = lang == "JP";
 
-        _labels["folder"].Text = isJp ? "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ•ã‚©ãƒ«ãƒ€" : "Template Folder";
-        _labels["thresh"].Text = isJp ? "ã—ãã„å€¤ (0.8 - 0.95)" : "Threshold (0.8 - 0.95)";
-        _labels["interval"].Text = isJp ? "ç›£è¦–é–“éš” (ãƒŸãƒªç§’)" : "Interval (ms)";
-        _labels["roi"].Text = isJp ? "ç›£è¦–ç¯„å›² (X, Y, å¹…, é«˜ã•)" : "ROI (X, Y, W, H)";
-        btnRoi.Text = isJp ? "ç”»é¢ã‹ã‚‰ç¯„å›²ã‚’é¸æŠ" : "Select ROI on Screen";
-        btnStart.Text = isJp ? "ç›£è¦–é–‹å§‹ (START)" : "START";
-        btnStop.Text = isJp ? "åœæ­¢ (STOP) F8" : "STOP (F8)";
+        _labels["folder"].Text = isJp ? "ƒeƒ“ƒvƒŒ[ƒgƒtƒHƒ‹ƒ_" : "Template Folder";
+        _labels["thresh"].Text = isJp ? "‚µ‚«‚¢’l (0.8 - 0.95)" : "Threshold (0.8 - 0.95)";
+        _labels["interval"].Text = isJp ? "ŠÄ‹ŠÔŠu (ƒ~ƒŠ•b)" : "Interval (ms)";
+        _labels["roi"].Text = isJp ? "ŠÄ‹”ÍˆÍ (X, Y, •, ‚‚³)" : "ROI (X, Y, W, H)";
+        btnRoi.Text = isJp ? "‰æ–Ê‚©‚ç”ÍˆÍ‚ğ‘I‘ğ" : "Select ROI on Screen";
+        btnStart.Text = isJp ? "ŠÄ‹ŠJn (START)" : "START";
+        btnStop.Text = isJp ? "’â~ (STOP) F8" : "STOP (F8)";
         
-        Log(isJp ? $"è¨€èªã‚’æ—¥æœ¬èªã«è¨­å®šã—ã¾ã—ãŸ" : $"Language set to English");
+        Log(isJp ? $"Œ¾Œê‚ğ“ú–{Œê‚Éİ’è‚µ‚Ü‚µ‚½" : $"Language set to English");
     }
 
     private async void Start()
@@ -103,12 +103,12 @@ public partial class Form1 : Form
         if (_active) return;
         try { 
             _matcher.Load(txtFolder.Text);
-            Log(_currentLang == "JP" ? "ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‚’èª­ã¿è¾¼ã¿ã¾ã—ãŸã€‚" : "Templates loaded.");
+            Log(_currentLang == "JP" ? "ƒeƒ“ƒvƒŒ[ƒg‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B" : "Templates loaded.");
         } catch (Exception ex) { Log(ex.Message); return; }
 
         _active = true; _cts = new CancellationTokenSource();
         UpdateUiState(true);
-        Log(_currentLang == "JP" ? "ç›£è¦–ã‚’é–‹å§‹ã—ã¾ã—ãŸã€‚" : "Monitoring started.");
+        Log(_currentLang == "JP" ? "ŠÄ‹‚ğŠJn‚µ‚Ü‚µ‚½B" : "Monitoring started.");
 
         try {
             await Task.Run(() => Loop(_cts.Token), _cts.Token);
@@ -120,7 +120,7 @@ public partial class Form1 : Form
         if (!_active) return;
         _cts?.Cancel(); _active = false;
         UpdateUiState(false);
-        Log(_currentLang == "JP" ? "ç›£è¦–ã‚’åœæ­¢ã—ã¾ã—ãŸã€‚" : "Monitoring stopped.");
+        Log(_currentLang == "JP" ? "ŠÄ‹‚ğ’â~‚µ‚Ü‚µ‚½B" : "Monitoring stopped.");
     }
 
     private void UpdateUiState(bool running)
@@ -145,12 +145,12 @@ public partial class Form1 : Form
             var res = _matcher.FindBest(bmp, threshold, roi);
 
             if (res.Found) {
-                Log(_currentLang == "JP" ? $"æ¤œå‡º: {res.Name} (ä¸€è‡´åº¦: {res.Score:F3})" : $"Hit: {res.Name} ({res.Score:F3})");
+                Log(_currentLang == "JP" ? $"ŒŸo: {res.Name} (ˆê’v“x: {res.Score:F3})" : $"Hit: {res.Name} ({res.Score:F3})");
                 _matcher.SaveDebugImage(bmp, res, roi);
                 await InputController.ClickAtAsync(res.Center.X, res.Center.Y);
                 await Task.Delay(50, ct); 
             } else if (res.Score == -100) {
-                Log(_currentLang == "JP" ? $"è­¦å‘Š: {res.Name} ãŒç›£è¦–ç¯„å›²ã‚ˆã‚Šå¤§ãã„ã§ã™ã€‚" : $"Warning: {res.Name} is larger than ROI.");
+                Log(_currentLang == "JP" ? $"Œx: {res.Name} ‚ªŠÄ‹”ÍˆÍ‚æ‚è‘å‚«‚¢‚Å‚·B" : $"Warning: {res.Name} is larger than ROI.");
                 await Task.Delay(interval, ct);
             } else {
                 await Task.Delay(interval, ct);
@@ -169,7 +169,7 @@ public partial class Form1 : Form
 
     protected override void WndProc(ref Message m) {
         _hotkey?.ProcessMessage(m.Msg, m.WParam);
-        if (m.Msg == 0x0312 && _active) Stop(); // F8ã§åœæ­¢
+        if (m.Msg == 0x0312 && _active) Stop(); // F8‚Å’â~
         base.WndProc(ref m);
     }
 }

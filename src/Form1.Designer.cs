@@ -6,26 +6,27 @@ partial class Form1
 
     protected override void Dispose(bool disposing)
     {
-        if (disposing && (components != null)) components.Dispose();
+        if (disposing && (components != null))
+        {
+            components.Dispose();
+        }
         base.Dispose(disposing);
     }
 
     private void InitializeComponent()
     {
-        this.btnStart = new Button();
-        this.btnStop = new Button();
-        this.lstLog = new ListView();
-        this.numThreshold = new NumericUpDown();
-        this.numInterval = new NumericUpDown();
-        // ... (省略箇所は Form1.cs で手動配置)
         this.SuspendLayout();
-        
+        // 
+        // Form1
+        // 
+        this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+        this.ClientSize = new System.Drawing.Size(790, 460);
+        this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+        this.MaximizeBox = false;
+        this.Name = "Form1";
         this.Text = "Guillotine Ray";
-        this.Size = new Size(800, 500);
-        this.BackColor = Color.FromArgb(30, 30, 30);
-        this.ForeColor = Color.White;
-        this.FormBorderStyle = FormBorderStyle.FixedSingle;
-        
         this.ResumeLayout(false);
     }
 
@@ -35,7 +36,6 @@ partial class Form1
     private NumericUpDown numThreshold;
     private NumericUpDown numInterval;
     private TextBox txtFolder;
-    private Button btnSelectRoi;
     private Button btnRoi;
     private Button btnLang;
     private NumericUpDown[] numRoi = new NumericUpDown[4];
