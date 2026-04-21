@@ -15,7 +15,7 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
-        this.Text = "Guillotine Ray v1.0.6";
+        this.Text = "Guillotine Ray v1.0.7";
         SetupUi();
         
         // 襍ｷ蜍墓凾縺ｮ蛻晄悄蛹悶・ Load 繧､繝吶Φ繝医〒陦後≧・医ワ繝ｳ繝峨Ν譛ｪ菴懈・繧ｨ繝ｩ繝ｼ蝗樣∩縺ｮ縺溘ａ・・        this.Load += (s, e) => {
