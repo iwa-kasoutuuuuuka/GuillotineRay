@@ -20,7 +20,7 @@ public partial class Form1 : Form
         SetLanguage("JP");
         this.Load += (s, e) => {
             _hotkey = new GlobalHotkey(this.Handle);
-            if (!_hotkey.Success) Log(_currentLang == "JP" ? "繧ｨ繝ｩ繝ｼ: F8繧ｭ繝ｼ縺ｮ逋ｻ骭ｲ縺ｫ螟ｱ謨励＠縺ｾ縺励◆縲・ : "Error: Failed to register F8 key.");
+            if (!_hotkey.Success) Log(_currentLang == "JP" ? "エラー: F8キーの登録に失敗しました。" : "Error: Failed to register F8 key.");
         };
         this.FormClosing += (s, e) => { _hotkey?.Dispose(); _matcher.Dispose(); _capture.Dispose(); };
     }
@@ -29,34 +29,34 @@ public partial class Form1 : Form
     {
         int left = 15;
         
-        // 險隱槫・繧頑崛縺医・繧ｿ繝ｳ
+        // 言語切り替えボタン
         btnLang = new Button { Text = "JP/EN", Bounds = new Rectangle(210, 5, 50, 22), FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 8) };
         btnLang.Click += (s, e) => SetLanguage(_currentLang == "JP" ? "EN" : "JP");
 
-        // 繝輔か繝ｫ繝驕ｸ謚・
-        _labels["folder"] = new Label { Text = "繝・Φ繝励Ξ繝ｼ繝医ヵ繧ｩ繝ｫ繝", Bounds = new Rectangle(left, 12, 180, 18), ForeColor = Color.LightGray };
+        // フォルダ選択
+        _labels["folder"] = new Label { Text = "テンプレートフォルダ", Bounds = new Rectangle(left, 12, 180, 18), ForeColor = Color.LightGray };
         string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "templates");
         txtFolder = new TextBox { Bounds = new Rectangle(left, 32, 200, 25), Text = Directory.Exists(defaultPath) ? defaultPath : "" };
         var btnPath = new Button { Text = "...", Bounds = new Rectangle(215, 32, 40, 25), FlatStyle = FlatStyle.Flat };
         btnPath.Click += (s, e) => { using var f = new FolderBrowserDialog(); if (f.ShowDialog() == DialogResult.OK) txtFolder.Text = f.SelectedPath; };
 
-        // 縺励″縺・､
-        _labels["thresh"] = new Label { Text = "縺励″縺・､ (0.8 - 0.95)", Bounds = new Rectangle(left, 65, 180, 18), ForeColor = Color.LightGray };
+        // しきい値
+        _labels["thresh"] = new Label { Text = "しきい値 (0.8 - 0.95)", Bounds = new Rectangle(left, 65, 180, 18), ForeColor = Color.LightGray };
         numThreshold = new NumericUpDown { Bounds = new Rectangle(left, 85, 100, 25), DecimalPlaces = 2, Value = 0.9m, Increment = 0.05m, Minimum = 0.1m, Maximum = 1.0m };
 
-        // 髢馴囈
-        _labels["interval"] = new Label { Text = "逶｣隕夜俣髫・(繝溘Μ遘・", Bounds = new Rectangle(left, 118, 180, 18), ForeColor = Color.LightGray };
+        // 間隔
+        _labels["interval"] = new Label { Text = "監視間隔 (ミリ秒)", Bounds = new Rectangle(left, 118, 180, 18), ForeColor = Color.LightGray };
         numInterval = new NumericUpDown { Bounds = new Rectangle(left, 138, 100, 25), Maximum = 60000, Value = 5000, Minimum = 10 };
 
         // ROI
-        _labels["roi"] = new Label { Text = "逶｣隕也ｯ・峇 (X, Y, 蟷・ 鬮倥＆)", Bounds = new Rectangle(left, 172, 240, 18), ForeColor = Color.LightGray };
+        _labels["roi"] = new Label { Text = "監視範囲 (X, Y, 幅, 高さ)", Bounds = new Rectangle(left, 172, 240, 18), ForeColor = Color.LightGray };
         string[] roiTags = { "X", "Y", "W", "H" };
         for (int i = 0; i < 4; i++) {
             numRoi[i] = new NumericUpDown { Bounds = new Rectangle(left + i * 60, 192, 55, 25), Maximum = 9999 };
         }
         numRoi[2].Value = 300; numRoi[3].Value = 300;
 
-        btnRoi = new Button { Text = "逕ｻ髱｢縺九ｉ遽・峇繧帝∈謚・, Bounds = new Rectangle(left, 225, 240, 32), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(60, 60, 60) };
+        btnRoi = new Button { Text = "画面から範囲を選択", Bounds = new Rectangle(left, 225, 240, 32), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(60, 60, 60) };
         btnRoi.Click += (s, e) => {
             this.Opacity = 0; using var sel = new SelectionForm();
             if (sel.ShowDialog() == DialogResult.OK) {
@@ -66,11 +66,11 @@ public partial class Form1 : Form
             this.Opacity = 1;
         };
 
-        // 繝ｭ繧ｰ
+        // ログ
         lstLog = new ListView { Bounds = new Rectangle(275, 40, 500, 395), View = View.Details, BackColor = Color.Black, ForeColor = Color.Lime, BorderStyle = BorderStyle.None, FullRowSelect = true };
         lstLog.Columns.Add("Time", 70); lstLog.Columns.Add("Log", 420);
 
-        // 謫堺ｽ懊・繧ｿ繝ｳ
+        // 操作ボタン
         btnStart = new Button { Text = "START", Bounds = new Rectangle(left, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0, 122, 204), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
         btnStop = new Button { Text = "STOP (F8)", Bounds = new Rectangle(left + 125, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(204, 0, 0), Enabled = false, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
 
@@ -87,15 +87,15 @@ public partial class Form1 : Form
         _currentLang = lang;
         bool isJp = lang == "JP";
 
-        _labels["folder"].Text = isJp ? "繝・Φ繝励Ξ繝ｼ繝医ヵ繧ｩ繝ｫ繝" : "Template Folder";
-        _labels["thresh"].Text = isJp ? "縺励″縺・､ (0.8 - 0.95)" : "Threshold (0.8 - 0.95)";
-        _labels["interval"].Text = isJp ? "逶｣隕夜俣髫・(繝溘Μ遘・" : "Interval (ms)";
-        _labels["roi"].Text = isJp ? "逶｣隕也ｯ・峇 (X, Y, 蟷・ 鬮倥＆)" : "ROI (X, Y, W, H)";
-        btnRoi.Text = isJp ? "逕ｻ髱｢縺九ｉ遽・峇繧帝∈謚・ : "Select ROI on Screen";
-        btnStart.Text = isJp ? "逶｣隕夜幕蟋・(START)" : "START";
-        btnStop.Text = isJp ? "蛛懈ｭ｢ (STOP) F8" : "STOP (F8)";
+        _labels["folder"].Text = isJp ? "テンプレートフォルダ" : "Template Folder";
+        _labels["thresh"].Text = isJp ? "しきい値 (0.8 - 0.95)" : "Threshold (0.8 - 0.95)";
+        _labels["interval"].Text = isJp ? "監視間隔 (ミリ秒)" : "Interval (ms)";
+        _labels["roi"].Text = isJp ? "監視範囲 (X, Y, 幅, 高さ)" : "ROI (X, Y, W, H)";
+        btnRoi.Text = isJp ? "画面から範囲を選択" : "Select ROI on Screen";
+        btnStart.Text = isJp ? "監視開始 (START)" : "START";
+        btnStop.Text = isJp ? "停止 (STOP) F8" : "STOP (F8)";
         
-        Log(isJp ? $"險隱槭ｒ譌･譛ｬ隱槭↓險ｭ螳壹＠縺ｾ縺励◆" : $"Language set to English");
+        Log(isJp ? $"言語を日本語に設定しました" : $"Language set to English");
     }
 
     private async void Start()
@@ -103,12 +103,12 @@ public partial class Form1 : Form
         if (_active) return;
         try { 
             _matcher.Load(txtFolder.Text);
-            Log(_currentLang == "JP" ? "繝・Φ繝励Ξ繝ｼ繝医ｒ隱ｭ縺ｿ霎ｼ縺ｿ縺ｾ縺励◆縲・ : "Templates loaded.");
+            Log(_currentLang == "JP" ? "テンプレートを読み込みました。" : "Templates loaded.");
         } catch (Exception ex) { Log(ex.Message); return; }
 
         _active = true; _cts = new CancellationTokenSource();
         UpdateUiState(true);
-        Log(_currentLang == "JP" ? "逶｣隕悶ｒ髢句ｧ九＠縺ｾ縺励◆縲・ : "Monitoring started.");
+        Log(_currentLang == "JP" ? "監視を開始しました。" : "Monitoring started.");
 
         try {
             await Task.Run(() => Loop(_cts.Token), _cts.Token);
@@ -120,7 +120,7 @@ public partial class Form1 : Form
         if (!_active) return;
         _cts?.Cancel(); _active = false;
         UpdateUiState(false);
-        Log(_currentLang == "JP" ? "逶｣隕悶ｒ蛛懈ｭ｢縺励∪縺励◆縲・ : "Monitoring stopped.");
+        Log(_currentLang == "JP" ? "監視を停止しました。" : "Monitoring stopped.");
     }
 
     private void UpdateUiState(bool running)
@@ -145,12 +145,12 @@ public partial class Form1 : Form
             var res = _matcher.FindBest(bmp, threshold, roi);
 
             if (res.Found) {
-                Log(_currentLang == "JP" ? $"讀懷・: {res.Name} (荳閾ｴ蠎ｦ: {res.Score:F3})" : $"Hit: {res.Name} ({res.Score:F3})");
+                Log(_currentLang == "JP" ? $"検出: {res.Name} (一致度: {res.Score:F3})" : $"Hit: {res.Name} ({res.Score:F3})");
                 _matcher.SaveDebugImage(bmp, res, roi);
                 await InputController.ClickAtAsync(res.Center.X, res.Center.Y);
                 await Task.Delay(50, ct); 
             } else if (res.Score == -100) {
-                Log(_currentLang == "JP" ? $"隴ｦ蜻・ {res.Name} 縺檎屮隕也ｯ・峇繧医ｊ螟ｧ縺阪＞縺ｧ縺吶・ : $"Warning: {res.Name} is larger than ROI.");
+                Log(_currentLang == "JP" ? $"警告: {res.Name} が監視範囲より大きいです。" : $"Warning: {res.Name} is larger than ROI.");
                 await Task.Delay(interval, ct);
             } else {
                 await Task.Delay(interval, ct);
@@ -169,7 +169,7 @@ public partial class Form1 : Form
 
     protected override void WndProc(ref Message m) {
         _hotkey?.ProcessMessage(m.Msg, m.WParam);
-        if (m.Msg == 0x0312 && _active) Stop(); // F8縺ｧ蛛懈ｭ｢
+        if (m.Msg == 0x0312 && _active) Stop(); // F8で停止
         base.WndProc(ref m);
     }
 }
