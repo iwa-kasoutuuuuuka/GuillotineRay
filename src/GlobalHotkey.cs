@@ -12,11 +12,12 @@ public class GlobalHotkey : IDisposable
     private readonly IntPtr _hWnd;
     private const int ID = 0xAA01;
     public event Action? Pressed;
+    public bool Success { get; private set; }
 
     public GlobalHotkey(IntPtr hWnd)
     {
         _hWnd = hWnd;
-        RegisterHotKey(_hWnd, ID, 0, 0x77); // F8
+        Success = RegisterHotKey(_hWnd, ID, 0, 0x77); // F8
     }
 
     public void ProcessMessage(int msg, IntPtr wParam)
