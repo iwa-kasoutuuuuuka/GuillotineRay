@@ -35,5 +35,8 @@ partial class Form1
     private NumericUpDown numThreshold;
     private NumericUpDown numInterval;
     private TextBox txtFolder;
+    private Button btnSelectRoi;
+    private Button btnRoi;
+    private Button btnLang;
     private NumericUpDown[] numRoi = new NumericUpDown[4];
 }

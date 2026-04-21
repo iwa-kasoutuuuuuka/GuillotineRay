@@ -9,31 +9,49 @@ public partial class Form1 : Form
     private GlobalHotkey? _hotkey;
     private CancellationTokenSource? _cts;
     private bool _active = false;
+    private string _currentLang = "JP";
+    private readonly Dictionary<string, Label> _labels = new();
 
     public Form1()
     {
         InitializeComponent();
         SetupUi();
+        SetLanguage("JP");
         this.Load += (s, e) => _hotkey = new GlobalHotkey(this.Handle);
     }
 
     private void SetupUi()
     {
+        int left = 15;
+        
+        // 言語切り替えボタン
+        btnLang = new Button { Text = "JP/EN", Bounds = new Rectangle(210, 5, 50, 22), FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 8) };
+        btnLang.Click += (s, e) => SetLanguage(_currentLang == "JP" ? "EN" : "JP");
+
         // フォルダ選択
+        _labels["folder"] = new Label { Text = "テンプレートフォルダ", Bounds = new Rectangle(left, 12, 180, 18), ForeColor = Color.LightGray };
         string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "templates");
-        txtFolder = new TextBox { Bounds = new Rectangle(10, 30, 200, 25), Text = Directory.Exists(defaultPath) ? defaultPath : "" };
-        var btnPath = new Button { Text = "...", Bounds = new Rectangle(215, 30, 40, 25) };
+        txtFolder = new TextBox { Bounds = new Rectangle(left, 32, 200, 25), Text = Directory.Exists(defaultPath) ? defaultPath : "" };
+        var btnPath = new Button { Text = "...", Bounds = new Rectangle(215, 32, 40, 25), FlatStyle = FlatStyle.Flat };
         btnPath.Click += (s, e) => { using var f = new FolderBrowserDialog(); if (f.ShowDialog() == DialogResult.OK) txtFolder.Text = f.SelectedPath; };
 
-        // 設定値
-        numThreshold = new NumericUpDown { Bounds = new Rectangle(10, 80, 100, 25), DecimalPlaces = 2, Value = 0.9m, Increment = 0.05m };
-        numInterval = new NumericUpDown { Bounds = new Rectangle(10, 130, 100, 25), Maximum = 60000, Value = 5000 };
+        // しきい値
+        _labels["thresh"] = new Label { Text = "しきい値 (0.8 - 0.95)", Bounds = new Rectangle(left, 65, 180, 18), ForeColor = Color.LightGray };
+        numThreshold = new NumericUpDown { Bounds = new Rectangle(left, 85, 100, 25), DecimalPlaces = 2, Value = 0.9m, Increment = 0.05m, Minimum = 0.1m, Maximum = 1.0m };
+
+        // 間隔
+        _labels["interval"] = new Label { Text = "監視間隔 (ミリ秒)", Bounds = new Rectangle(left, 118, 180, 18), ForeColor = Color.LightGray };
+        numInterval = new NumericUpDown { Bounds = new Rectangle(left, 138, 100, 25), Maximum = 60000, Value = 5000, Minimum = 10 };
 
         // ROI
-        for (int i = 0; i < 4; i++) numRoi[i] = new NumericUpDown { Bounds = new Rectangle(10 + i * 55, 180, 50, 25), Maximum = 9999 };
+        _labels["roi"] = new Label { Text = "監視範囲 (X, Y, 幅, 高さ)", Bounds = new Rectangle(left, 172, 240, 18), ForeColor = Color.LightGray };
+        string[] roiTags = { "X", "Y", "W", "H" };
+        for (int i = 0; i < 4; i++) {
+            numRoi[i] = new NumericUpDown { Bounds = new Rectangle(left + i * 60, 192, 55, 25), Maximum = 9999 };
+        }
         numRoi[2].Value = 300; numRoi[3].Value = 300;
 
-        var btnRoi = new Button { Text = "Set ROI", Bounds = new Rectangle(10, 210, 245, 30) };
+        btnRoi = new Button { Text = "画面から範囲を選択", Bounds = new Rectangle(left, 225, 240, 32), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(60, 60, 60) };
         btnRoi.Click += (s, e) => {
             this.Opacity = 0; using var sel = new SelectionForm();
             if (sel.ShowDialog() == DialogResult.OK) {
@@ -44,28 +62,48 @@ public partial class Form1 : Form
         };
 
         // ログ
-        lstLog = new ListView { Bounds = new Rectangle(270, 30, 500, 400), View = View.Details, BackColor = Color.Black, ForeColor = Color.Green };
-        lstLog.Columns.Add("Time", 80); lstLog.Columns.Add("Log", 400);
+        lstLog = new ListView { Bounds = new Rectangle(275, 40, 500, 395), View = View.Details, BackColor = Color.Black, ForeColor = Color.Lime, BorderStyle = BorderStyle.None, FullRowSelect = true };
+        lstLog.Columns.Add("Time", 70); lstLog.Columns.Add("Log", 420);
 
-        // ボタン
-        btnStart = new Button { Text = "START", Bounds = new Rectangle(10, 400, 120, 40), BackColor = Color.DarkGreen };
-        btnStop = new Button { Text = "STOP", Bounds = new Rectangle(135, 400, 120, 40), BackColor = Color.DarkRed, Enabled = false };
+        // 操作ボタン
+        btnStart = new Button { Text = "START", Bounds = new Rectangle(left, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0, 122, 204), Font = new Font("Segoe UI", 10, FontStyle.Bold) };
+        btnStop = new Button { Text = "STOP (F8)", Bounds = new Rectangle(left + 125, 400, 115, 40), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(204, 0, 0), Enabled = false, Font = new Font("Segoe UI", 10, FontStyle.Bold) };
 
         btnStart.Click += (s, e) => Start();
         btnStop.Click += (s, e) => Stop();
 
-        this.Controls.AddRange(new Control[] { txtFolder, btnPath, numThreshold, numInterval, btnRoi, lstLog, btnStart, btnStop });
+        this.Controls.AddRange(new Control[] { btnLang, txtFolder, btnPath, numThreshold, numInterval, btnRoi, lstLog, btnStart, btnStop });
+        foreach (var lbl in _labels.Values) this.Controls.Add(lbl);
         this.Controls.AddRange(numRoi);
+    }
+
+    private void SetLanguage(string lang)
+    {
+        _currentLang = lang;
+        bool isJp = lang == "JP";
+
+        _labels["folder"].Text = isJp ? "テンプレートフォルダ" : "Template Folder";
+        _labels["thresh"].Text = isJp ? "しきい値 (0.8 - 0.95)" : "Threshold (0.8 - 0.95)";
+        _labels["interval"].Text = isJp ? "監視間隔 (ミリ秒)" : "Interval (ms)";
+        _labels["roi"].Text = isJp ? "監視範囲 (X, Y, 幅, 高さ)" : "ROI (X, Y, W, H)";
+        btnRoi.Text = isJp ? "画面から範囲を選択" : "Select ROI on Screen";
+        btnStart.Text = isJp ? "監視開始 (START)" : "START";
+        btnStop.Text = isJp ? "停止 (STOP) F8" : "STOP (F8)";
+        
+        Log(isJp ? $"言語を日本語に設定しました" : $"Language set to English");
     }
 
     private async void Start()
     {
         if (_active) return;
-        try { _matcher.Load(txtFolder.Text); } catch (Exception ex) { Log(ex.Message); return; }
+        try { 
+            _matcher.Load(txtFolder.Text);
+            Log(_currentLang == "JP" ? "テンプレートを読み込みました。" : "Templates loaded.");
+        } catch (Exception ex) { Log(ex.Message); return; }
 
         _active = true; _cts = new CancellationTokenSource();
-        btnStart.Enabled = false; btnStop.Enabled = true;
-        Log("Monitoring started.");
+        UpdateUiState(true);
+        Log(_currentLang == "JP" ? "監視を開始しました。" : "Monitoring started.");
 
         try {
             await Task.Run(() => Loop(_cts.Token), _cts.Token);
@@ -76,8 +114,15 @@ public partial class Form1 : Form
     {
         if (!_active) return;
         _cts?.Cancel(); _active = false;
-        btnStart.Enabled = true; btnStop.Enabled = false;
-        Log("Monitoring stopped.");
+        UpdateUiState(false);
+        Log(_currentLang == "JP" ? "監視を停止しました。" : "Monitoring stopped.");
+    }
+
+    private void UpdateUiState(bool running)
+    {
+        if (InvokeRequired) { BeginInvoke(new Action(() => UpdateUiState(running))); return; }
+        btnStart.Enabled = !running;
+        btnStop.Enabled = running;
     }
 
     private async Task Loop(CancellationToken ct)
@@ -95,12 +140,12 @@ public partial class Form1 : Form
             var res = _matcher.FindBest(bmp, threshold, roi);
 
             if (res.Found) {
-                Log($"Hit: {res.Name} ({res.Score:F3})");
+                Log(_currentLang == "JP" ? $"検出: {res.Name} (一致度: {res.Score:F3})" : $"Hit: {res.Name} ({res.Score:F3})");
                 _matcher.SaveDebugImage(bmp, res, roi);
                 await InputController.ClickAtAsync(res.Center.X, res.Center.Y);
                 await Task.Delay(50, ct); 
             } else if (res.Score == -100) {
-                Log($"Warning: {res.Name} is larger than ROI.");
+                Log(_currentLang == "JP" ? $"警告: {res.Name} が監視範囲より大きいです。" : $"Warning: {res.Name} is larger than ROI.");
                 await Task.Delay(interval, ct);
             } else {
                 await Task.Delay(interval, ct);
