@@ -1,4 +1,4 @@
-﻿# Guillotine Ray - 取扱説明書 (User Manual)
+# Guillotine Ray - 取扱説明書 (User Manual)
 
 ## 💡 はじめに
 Guillotine Ray をご利用いただきありがとうございます。
