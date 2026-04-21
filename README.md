@@ -7,10 +7,35 @@
 
 **Guillotine Ray** is a high-performance, precision-engineered screen monitoring and auto-clicking tool built with C# and OpenCV. Designed for stability and speed, it excels in complex automation tasks with DPI-aware accuracy and minimal CPU overhead.
 
-[日本語の解説は以下にあります](#日本語)
+[英語の解説は以下にあります](#English)
+
+
+## 🇯🇵 日本語概要
+
+**Guillotine Ray** は、C# と OpenCV を駆使して開発された、高性能かつ精密なスクリーン監視・オートクリッカーです。安定性と速度を追求し、高DPI環境下でもピクセル単位の正確な動作を提供します。
+**Guillotine Ray** ギロチン・レイは、RUNとかAllowとかのボタンを自動クリックするだけのアプリです。
+バグがあって失敗しても泣くな！！作者は一切保証しない。
+
+### 🌟 特徴
+- **OpenCV テンプレートマッチング**: `CCoeffNormed` による高精度検出。
+- **低負荷キャプチャ**: 関心領域（ROI）のみをスキャンし、CPU消費を最小化。
+- **マルチモニター対応**: Windows のスケーリング設定を考慮した正確な座標計算。
+- **管理者権限対応**: `SendInput` を確実に動作させるためのマニフェスト実装。
+- **デバッグモード**: ヒット時のスクリーンショット保存とバウンディングボックス表示。
+
+### 🔧 開発環境
+- C# / .NET 8 / Windows Forms
+- OpenCvSharp4
+
+## ⚖️ License
+This project is licensed under the [MIT License](LICENSE).
+
+
+
+
 
 ---
-
+<a name="English"></a>
 ## 🚀 Key Features
 
 - **OpenCV Pattern Matching**: High-accuracy detection using `CCoeffNormed` algorithm.
@@ -34,22 +59,3 @@
 4. **Execution**: Set your threshold (0.8 - 0.95) and interval, then hit "START".
 
 ---
-
-<a name="日本語"></a>
-## 🇯🇵 日本語概要
-
-**Guillotine Ray** は、C# と OpenCV を駆使して開発された、高性能かつ精密なスクリーン監視・オートクリッカーです。安定性と速度を追求し、高DPI環境下でもピクセル単位の正確な動作を提供します。
-
-### 🌟 特徴
-- **OpenCV テンプレートマッチング**: `CCoeffNormed` による高精度検出。
-- **低負荷キャプチャ**: 関心領域（ROI）のみをスキャンし、CPU消費を最小化。
-- **マルチモニター対応**: Windows のスケーリング設定を考慮した正確な座標計算。
-- **管理者権限対応**: `SendInput` を確実に動作させるためのマニフェスト実装。
-- **デバッグモード**: ヒット時のスクリーンショット保存とバウンディングボックス表示。
-
-### 🔧 開発環境
-- C# / .NET 8 / Windows Forms
-- OpenCvSharp4
-
-## ⚖️ License
-This project is licensed under the [MIT License](LICENSE).
