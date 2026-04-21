@@ -20,6 +20,7 @@ Write-Host "Copying files..."
 Copy-Item "$binDir\*" "$distDir\" -Exclude "*.pdb", "*.dll.config"
 Copy-Item "LICENSE" "$distDir\"
 Copy-Item "docs\manual_ja.md" "$distDir\"
+Copy-Item "templates" "$distDir\" -Recurse
 
 # 4. ZIP圧縮
 Write-Host "Creating ZIP: $zipName"

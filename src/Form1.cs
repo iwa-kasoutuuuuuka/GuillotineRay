@@ -20,7 +20,8 @@ public partial class Form1 : Form
     private void SetupUi()
     {
         // フォルダ選択
-        txtFolder = new TextBox { Bounds = new Rectangle(10, 30, 200, 25) };
+        string defaultPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "templates");
+        txtFolder = new TextBox { Bounds = new Rectangle(10, 30, 200, 25), Text = Directory.Exists(defaultPath) ? defaultPath : "" };
         var btnPath = new Button { Text = "...", Bounds = new Rectangle(215, 30, 40, 25) };
         btnPath.Click += (s, e) => { using var f = new FolderBrowserDialog(); if (f.ShowDialog() == DialogResult.OK) txtFolder.Text = f.SelectedPath; };
 
