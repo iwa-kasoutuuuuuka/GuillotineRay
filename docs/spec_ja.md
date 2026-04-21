@@ -1,4 +1,4 @@
-﻿# Guillotine Ray - 製品仕様書 (Technical Specification)
+# Guillotine Ray - 製品仕様書 (Technical Specification)
 
 ## 1. ソフトウェア概要
 **Guillotine Ray** は、C# .NET 8 と OpenCV を統合した、高精度・低負荷な Windows 用スクリーン監視型オートクリッカーです。
