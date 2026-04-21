@@ -1,6 +1,6 @@
 # Guillotine Ray 最終配布用パッケージ作成スクリプト
 
-$version = "1.0.0"
+$version = "1.0.1"
 $distDir = "dist"
 $binDir = "bin"
 $zipName = "GuillotineRay_v$version.zip"

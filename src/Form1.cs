@@ -15,6 +15,7 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
+        this.Text = "Guillotine Ray v1.0.1";
         SetupUi();
         SetLanguage("JP");
         this.Load += (s, e) => _hotkey = new GlobalHotkey(this.Handle);
