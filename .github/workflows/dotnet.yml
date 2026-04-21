@@ -1,0 +1,31 @@
+name: .NET 8 Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      using: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore src/GuillotineRay.csproj
+      
+    - name: Build
+      run: dotnet build src/GuillotineRay.csproj --configuration Release --no-restore -o publish
+      
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: GuillotineRay-Build
+        path: publish/
