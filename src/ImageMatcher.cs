@@ -60,7 +60,6 @@ public class ImageMatcher : IDisposable
     {
         if (template.Width > scene.Width || template.Height > scene.Height)
         {
-            // ログ用にスコアに特殊な値を設定
             return new MatchResult { Found = false, Score = -100, Name = name };
         }
 
