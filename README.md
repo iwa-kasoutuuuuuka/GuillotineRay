@@ -2,7 +2,7 @@
 
 ![Guillotine Ray Logo](docs/logo.png)
 
-## 📦 Download / ダウンローチE- **[GuillotineRay_v1.0.8.zip](https://github.com/iwa-kasoutuuuuuka/GuillotineRay/raw/main/releases/GuillotineRay_v1.0.8.zip)** (Windows 64-bit)
+## 📦 Download / ダウンローチE- **[GuillotineRay_v1.0.9.zip](https://github.com/iwa-kasoutuuuuuka/GuillotineRay/raw/main/releases/GuillotineRay_v1.0.9.zip)** (Windows 64-bit)
 
 **Guillotine Ray** is a high-performance, precision-engineered screen monitoring and auto-clicking tool built with C# and OpenCV. Designed for stability and speed, it excels in complex automation tasks with DPI-aware accuracy and minimal CPU overhead.
 
